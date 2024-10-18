@@ -1,16 +1,31 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { DataContext } from '../components/DataContext'; // Asegúrate de que la ruta es correcta
 
 const LoginScreen = ({ navigation }) => {
+  const { setIsLoggedIn } = useContext(DataContext);
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false); // Estado para recordar contraseña
+  const [rememberMe, setRememberMe] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    console.log('Props en LoginScreen:', { navigation, setIsLoggedIn }); // Verifica que esta línea muestra la función
+
+    // Simulación de autenticación: en la práctica, reemplaza esto con tu lógica real
+    if (email === 'prueba@gmail.com' && password === '12345') {
+      console.log('Iniciando sesión...');
+      setIsLoggedIn(true);
+      navigation.replace('Main');
+    } else {
+      alert('Credenciales incorrectas. Inténtalo de nuevo.'); // Mensaje de error mejorado
+    }
+  };
 
   return (
     <View style={styles.container}>
-      {/* Espacio para la imagen en la parte superior */}
       <Image source={require('../../assets/favicon.png')} style={styles.image} resizeMode='contain' />
-
       <Text style={styles.title}>Iniciar Sesión</Text>
 
       {/* Input de correo electrónico */}
@@ -19,6 +34,8 @@ const LoginScreen = ({ navigation }) => {
         style={styles.input}
         keyboardType='email-address'
         autoCapitalize='none'
+        value={email}
+        onChangeText={setEmail}
       />
 
       {/* Input de contraseña con botón de mostrar/ocultar */}
@@ -28,16 +45,11 @@ const LoginScreen = ({ navigation }) => {
           style={styles.inputPassword}
           secureTextEntry={!passwordVisible}
           autoCapitalize='none'
+          value={password}
+          onChangeText={setPassword}
         />
-        <TouchableOpacity
-          style={styles.icon}
-          onPress={() => setPasswordVisible(!passwordVisible)} // Cambia la visibilidad de la contraseña
-        >
-          <MaterialCommunityIcons
-            name={passwordVisible ? 'eye-off' : 'eye'} // Cambia el ícono
-            size={24}
-            color='gray'
-          />
+        <TouchableOpacity style={styles.icon} onPress={() => setPasswordVisible(!passwordVisible)}>
+          <MaterialCommunityIcons name={passwordVisible ? 'eye-off' : 'eye'} size={24} color='gray' />
         </TouchableOpacity>
       </View>
 
@@ -45,8 +57,7 @@ const LoginScreen = ({ navigation }) => {
       <View style={styles.rememberMeContainer}>
         <TouchableOpacity onPress={() => setRememberMe(!rememberMe)}>
           <View style={[styles.checkbox, rememberMe && styles.checked]}>
-            {rememberMe && <View style={styles.innerCheckbox} />}{' '}
-            {/* Cuadro interno que se muestra cuando está marcado */}
+            {rememberMe && <View style={styles.innerCheckbox} />}
           </View>
         </TouchableOpacity>
         <Text style={styles.rememberMeText}>Recordar contraseña</Text>
@@ -58,12 +69,8 @@ const LoginScreen = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* Botón de login */}
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
-        <Text style={styles.buttonText}>Volver al inicio</Text>
       </TouchableOpacity>
 
       {/* Texto de "Regístrate aquí" que navega a la pantalla de registro */}
