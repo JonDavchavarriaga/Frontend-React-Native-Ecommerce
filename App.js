@@ -1,30 +1,71 @@
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import React, { useEffect } from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { DataProvider } from './src/components/DataContext';
+import { DataContext, DataProvider } from './src/components/DataContext';
 import ModalComponent from './src/components/ModalComponent';
-import NavBar from './src/components/NavBar';
 import Products from './src/components/Products';
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+const HomeScreen = () => (
+  <View style={styles.container}>
+    <Products />
+    <ModalComponent />
+  </View>
+);
+
+function Tabs({ route }) {
+  const { isLoggedIn } = useContext(DataContext);
+  return (
+    <Tab.Navigator
+      initialRouteName='Home'
+      screenOptions={{
+        tabBarActiveTintColor: 'black',
+        tabBarInactiveTintColor: 'gray',
+      }}
+    >
+      <Tab.Screen
+        name='Home'
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ color }) => <MaterialIcons name='star' size={24} color={color} />,
+        }}
+      />
+      {isLoggedIn ? null : (
+        <Tab.Screen
+          name='Login'
+          component={LoginScreen}
+          options={{
+            tabBarIcon: ({ color }) => <MaterialIcons name='person' size={24} color={color} />,
+          }}
+        />
+      )}
+      <Tab.Screen
+        name='Cart'
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ color }) => <MaterialIcons name='shopping-cart' size={24} color={color} />,
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
 
 export default function App() {
-  useEffect(() => {
-    document.title = 'FOURMINDS STORE';
-  }, []);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <DataProvider>
       <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName='Home'
-          screenOptions={{ headerShown: false }} // Ocultar el encabezado
-        >
-          <Stack.Screen name='Home' component={HomeScreen} />
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name='Main' component={Tabs} />
           <Stack.Screen name='Login' component={LoginScreen} />
           <Stack.Screen name='Register' component={RegisterScreen} />
           <Stack.Screen name='ForgotPassword' component={ForgotPasswordScreen} />
@@ -34,22 +75,10 @@ export default function App() {
   );
 }
 
-const HomeScreen = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <NavBar navigation={navigation} />
-      <Products />
-      <ModalComponent />
-    </View>
-  );
-};
-
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
     flex: 1,
+    padding: 16,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });

@@ -58,13 +58,8 @@ const RegisterScreen = ({ navigation }) => {
       </View>
 
       {/* Botón de registro */}
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+      <TouchableOpacity style={styles.button} onPress={(handleRegister) => navigation.navigate('Login')}>
         <Text style={styles.buttonText}>Registrarse</Text>
-      </TouchableOpacity>
-
-      {/* Enlace para volver al inicio */}
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
-        <Text style={styles.buttonText}>Volver al inicio</Text>
       </TouchableOpacity>
     </View>
   );
