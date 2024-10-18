@@ -34,39 +34,39 @@ const ForgotPasswordScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff', // Color de fondo blanco
+    backgroundColor: '#ffffff',
     padding: 20,
     justifyContent: 'center',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'orange', // Color naranja
+    color: 'orange',
     marginBottom: 10,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    color: '#333333', // Color de texto gris oscuro
+    color: '#333333',
     marginBottom: 20,
     textAlign: 'center',
   },
   input: {
     height: 50,
-    borderColor: 'orange', // Borde naranja
+    borderColor: 'orange',
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 15,
     marginBottom: 20,
   },
   button: {
-    backgroundColor: 'orange', // Fondo negro
+    backgroundColor: 'orange',
     borderRadius: 10,
     paddingVertical: 15,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#FFFFFF', // Texto blanco
+    color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   linkText: {
-    color: 'orange', // Color naranja
+    color: 'orange',
     textDecorationLine: 'underline',
     fontSize: 16,
   },
