@@ -1,18 +1,15 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons'; // Importar ícono del ojo
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const LoginScreen = ({ navigation }) => {
-  const [passwordVisible, setPasswordVisible] = useState(false); // Estado para la visibilidad de la contraseña
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false); // Estado para recordar contraseña
 
   return (
     <View style={styles.container}>
       {/* Espacio para la imagen en la parte superior */}
-      <Image
-        source={require('../../assets/favicon.png')} // Asegúrate de tener una imagen en esa ruta
-        style={styles.image}
-        resizeMode='contain'
-      />
+      <Image source={require('../../assets/favicon.png')} style={styles.image} resizeMode='contain' />
 
       <Text style={styles.title}>Iniciar Sesión</Text>
 
@@ -29,7 +26,7 @@ const LoginScreen = ({ navigation }) => {
         <TextInput
           placeholder='Contraseña'
           style={styles.inputPassword}
-          secureTextEntry={!passwordVisible} // Cambia el tipo de entrada basado en el estado
+          secureTextEntry={!passwordVisible}
           autoCapitalize='none'
         />
         <TouchableOpacity
@@ -42,6 +39,17 @@ const LoginScreen = ({ navigation }) => {
             color='gray'
           />
         </TouchableOpacity>
+      </View>
+
+      {/* Check de recordar contraseña */}
+      <View style={styles.rememberMeContainer}>
+        <TouchableOpacity onPress={() => setRememberMe(!rememberMe)}>
+          <View style={[styles.checkbox, rememberMe && styles.checked]}>
+            {rememberMe && <View style={styles.innerCheckbox} />}{' '}
+            {/* Cuadro interno que se muestra cuando está marcado */}
+          </View>
+        </TouchableOpacity>
+        <Text style={styles.rememberMeText}>Recordar contraseña</Text>
       </View>
 
       {/* Texto de "¿Olvidó su contraseña?" */}
@@ -74,9 +82,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   image: {
-    width: '100%', // Ancho de la imagen
-    height: 150, // Alto ajustado
-    marginBottom: 20, // Espacio debajo de la imagen
+    width: '100%',
+    height: 150,
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,
@@ -110,6 +118,30 @@ const styles = StyleSheet.create({
     color: 'orange',
     textAlign: 'right',
     marginBottom: 20,
+  },
+  rememberMeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
+  },
+  innerCheckbox: {
+    width: 12,
+    height: 12,
+    backgroundColor: 'orange',
+    borderRadius: 2,
+  },
+  rememberMeText: {
+    fontSize: 16,
   },
   button: {
     backgroundColor: 'orange',

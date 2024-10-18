@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons'; // Importar ícono del ojo
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
@@ -13,17 +13,13 @@ const RegisterScreen = ({ navigation }) => {
       Alert.alert('Error', 'Las contraseñas no coinciden');
       return;
     }
-    // Aquí puedes agregar la lógica para el registro
     Alert.alert('Éxito', 'Registro exitoso');
   };
 
   return (
     <View style={styles.container}>
       {/* Espacio para la imagen */}
-      <Image
-        source={require('../../assets/favicon.png')} // Asegúrate de tener un logo en la carpeta assets
-        style={styles.logo}
-      />
+      <Image source={require('../../assets/favicon.png')} style={styles.logo} />
 
       <TextInput placeholder='Nombre(s)' style={styles.input} />
       <TextInput placeholder='Apellidos' style={styles.input} />
@@ -57,11 +53,7 @@ const RegisterScreen = ({ navigation }) => {
           onChangeText={setConfirmPassword}
         />
         <TouchableOpacity onPress={() => setConfirmPasswordVisible(!confirmPasswordVisible)} style={styles.icon}>
-          <MaterialCommunityIcons
-            name={confirmPasswordVisible ? 'eye-off' : 'eye'} // Cambia el ícono
-            size={24}
-            color='gray'
-          />
+          <MaterialCommunityIcons name={confirmPasswordVisible ? 'eye-off' : 'eye'} size={24} color='gray' />
         </TouchableOpacity>
       </View>
 
@@ -85,10 +77,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    width: 100, // Ajusta el tamaño de la imagen según necesites
+    width: 100,
     height: 100,
     alignSelf: 'center',
-    marginBottom: 20, // Espaciado debajo de la imagen
+    marginBottom: 20,
   },
   input: {
     height: 40,
@@ -105,19 +97,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 15,
-    position: 'relative', // Para el icono dentro del contenedor
+    position: 'relative',
   },
   passwordInput: {
     flex: 1,
     padding: 10,
   },
   icon: {
-    position: 'absolute', // Para que el icono se posicione dentro del input
+    position: 'absolute',
     right: 10,
-    zIndex: 1, // Para asegurarte de que el icono esté por encima
+    zIndex: 1,
   },
   button: {
-    backgroundColor: 'orange', // Color del botón
+    backgroundColor: 'orange',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -130,7 +122,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   backButton: {
-    backgroundColor: 'orange', // Color del botón de "Volver al inicio"
+    backgroundColor: 'orange',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
