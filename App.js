@@ -5,12 +5,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useContext, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { DataContext, DataProvider } from './src/components/DataContext';
-import ModalComponent from './src/components/ModalComponent';
 import Products from './src/components/Products';
 import CartScreen from './src/screens/CartScreen';
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -18,19 +19,18 @@ const Tab = createBottomTabNavigator();
 const HomeScreen = () => (
   <View style={styles.container}>
     <Products />
-    <ModalComponent />
   </View>
 );
 
-function Tabs() {
+function Tabs({ navigation }) {
   const { isLoggedIn, setIsLoggedIn } = useContext(DataContext);
-
+  const [token, setToken] = useState(null);
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('jwtToken');
       setToken(null);
       setIsLoggedIn(false);
-      navigation.navigate('Login');
+      navigation.replace('Main');
     } catch (error) {
       console.error('Error al eliminar el token', error);
     }

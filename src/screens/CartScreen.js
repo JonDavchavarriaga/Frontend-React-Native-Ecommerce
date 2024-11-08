@@ -45,7 +45,7 @@ export default function CartScreen() {
       <View style={styles.totalContainer}>
         <Text style={styles.totalText}>Total: ${getTotalPrice()}</Text>
         <TouchableOpacity style={styles.checkoutButton} onPress={() => alert('Continuar con la compra')}>
-          <Text style={styles.checkoutButtonText}>Checkout</Text>
+          <Text style={styles.checkoutButtonText}>Ir a pagar</Text>
         </TouchableOpacity>
       </View>
     </View>
