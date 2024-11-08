@@ -1,61 +1,33 @@
-import React, { useContext, useState } from 'react';
-import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { DataContext } from './DataContext';
 
 const Products = () => {
   const { buyProducts } = useContext(DataContext);
-  const productos = [
-    {
-      id: 1,
-      productName: 'Iphone 11',
-      price: 699,
-      img: 'https://www.pngarts.com/files/8/Apple-iPhone-11-PNG-Image.png',
-    },
-    {
-      id: 2,
-      productName: 'Samsung Galaxy S21',
-      price: 799,
-      img: 'https://images.samsung.com/is/image/samsung/p6pim/mx/galaxy-s21/gallery/mx-galaxy-s21-5g-g991-sm-g991bzvlltm-368339682?$624_624_PNG$',
-    },
-    {
-      id: 3,
-      productName: 'Sony 4K TV',
-      price: 1200,
-      img: 'https://sony.scene7.com/is/image/sonyglobalsolutions/TVFY23_UE_Primary_image?$mediaCarouselSmall$&fmt=png-alpha',
-    },
-    {
-      id: 4,
-      productName: 'MacBook Pro',
-      price: 1500,
-      img: 'https://atlas-content-cdn.pixelsquid.com/assets_v2/246/2461903618920420852/previews/G03-200x200.jpg',
-    },
-    {
-      id: 5,
-      productName: 'Dell XPS 13',
-      price: 999,
-      img: 'https://i.blogs.es/0e6ccc/dell-xps-12-1/1366_2000.png',
-    },
-    {
-      id: 6,
-      productName: 'Apple Watch Series 6',
-      price: 399,
-      img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFD3iHNU_6X_K-Lpetwf22Sz1CfaJI8FgB4g&s',
-    },
-  ];
 
-  const [hoveredIndex, setHoveredIndex] = useState(null); // Estado para controlar el hover
-  const [touchedIndex, setTouchedIndex] = useState(null); // Estado para controlar cuando se toca en dispositivos móviles
+  // Estado para almacenar los productos obtenidos
+  const [productos, setProductos] = useState([]);
+
+  // Usamos useEffect para hacer la solicitud cuando el componente se monta
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        // Hacemos la solicitud a la API
+        const response = await fetch('http://localhost:8080/Article?page=0&size=10&sortBy=name&ascending=true');
+        const data = await response.json();
+
+        // Extraemos los productos del JSON y actualizamos el estado
+        setProductos(data.content);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []); // Este hook solo se ejecuta una vez cuando el componente se monta
 
   const handleBuyPress = (product) => {
     buyProducts(product);
-  };
-
-  const handlePressIn = (index) => {
-    setTouchedIndex(index); // Simula el hover cuando se toca en móviles
-  };
-
-  const handlePressOut = () => {
-    setTouchedIndex(null); // Elimina el efecto de aumento al dejar de tocar
   };
 
   return (
@@ -63,22 +35,14 @@ const Products = () => {
       <Text style={styles.header}>FOURMINDS STORE</Text>
       <FlatList
         data={productos}
-        renderItem={({ item, index }) => (
+        renderItem={({ item }) => (
           <View style={styles.productItem}>
-            <Image source={{ uri: item.img }} style={styles.productImage} />
-            <Text style={styles.productName}>{item.productName}</Text>
-            <Text style={styles.productPrice}> Precio: {item.price} $</Text>
-            <Pressable
-              style={[
-                styles.buyButton,
-                (hoveredIndex === index || touchedIndex === index) && styles.buyButtonHovered, // Aplica el estilo de aumento
-              ]}
-              onPress={() => handleBuyPress(item)}
-              onMouseEnter={() => setHoveredIndex(index)} // Activa el hover en escritorio
-              onMouseLeave={() => setHoveredIndex(null)} // Desactiva el hover
-              onPressIn={() => handlePressIn(index)} // Activa el efecto de aumento al presionar en móviles
-              onPressOut={handlePressOut} // Desactiva el efecto de aumento al soltar el toque en móviles
-            >
+            {/* Asegúrate de que la URL de la imagen esté completa */}
+            {/* <Image source={{ uri: {item.image} }} style={styles.productImage} /> */}
+            <Text style={styles.productName}>{item.name}</Text>
+            <Text style={styles.productPrice}>Precio: {item.price} $</Text>
+            <Text style={styles.productDescription}>{item.description}</Text>
+            <Pressable style={styles.buyButton} onPress={() => handleBuyPress(item)}>
               <Text style={styles.buyButtonText}>Comprar</Text>
             </Pressable>
           </View>
@@ -122,18 +86,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'green',
   },
+  productDescription: {
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 8,
+  },
   buyButton: {
     backgroundColor: 'orange',
     padding: 8,
     width: 150,
     marginTop: 8,
     borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'transform 0.2s ease', // Hace la animación más suave en la web
-  },
-  buyButtonHovered: {
-    transform: [{ scale: 1.1 }], // Aumento de tamaño al hacer hover o al presionar
   },
   buyButtonText: {
     color: 'white',
