@@ -2,7 +2,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { DataContext, DataProvider } from './src/components/DataContext';
 import Products from './src/components/Products';
@@ -11,7 +11,6 @@ import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -23,17 +22,11 @@ const HomeScreen = () => (
 );
 
 function Tabs({ navigation }) {
-  const { isLoggedIn, setIsLoggedIn } = useContext(DataContext);
-  const [token, setToken] = useState(null);
+  const { isLoggedIn, setIsLoggedIn, logout } = useContext(DataContext); // Usa el contexto directamente
+
   const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem('jwtToken');
-      setToken(null);
-      setIsLoggedIn(false);
-      navigation.replace('Main');
-    } catch (error) {
-      console.error('Error al eliminar el token', error);
-    }
+    await logout(); // Usa la función logout del contexto
+    navigation.replace('Main'); // Redirige a la pantalla principal
   };
 
   return (
@@ -85,10 +78,8 @@ function Tabs({ navigation }) {
 }
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   return (
-    <DataProvider value={{ isLoggedIn, setIsLoggedIn }}>
+    <DataProvider>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name='Main' component={Tabs} />

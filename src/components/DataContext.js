@@ -1,11 +1,40 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DataContext = createContext();
 
 const DataProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cart, setCart] = useState([]);
-  const logout = () => setIsLoggedIn(false);
+  const [token, setToken] = useState(null);
+
+  // Cargar el token de AsyncStorage al iniciar la app
+  useEffect(() => {
+    const loadToken = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('jwtToken');
+        if (storedToken) {
+          setToken(storedToken);
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        console.error('Error al cargar el token', error);
+      }
+    };
+    loadToken();
+  }, []);
+
+  // Eliminar el token y cerrar sesión
+  const logout = async () => {
+    try {
+      await AsyncStorage.removeItem('jwtToken');
+      setToken(null);
+      setIsLoggedIn(false);
+      setCart([]); // Opcional: limpiar el carrito al cerrar sesión
+    } catch (error) {
+      console.error('Error al eliminar el token', error);
+    }
+  };
 
   // Añadir un producto o actualizar la cantidad si ya existe
   const buyProducts = (product) => {
@@ -49,6 +78,7 @@ const DataProvider = ({ children }) => {
         isLoggedIn,
         setIsLoggedIn,
         logout,
+        token, // Exporta el token si lo necesitas en otros componentes
       }}
     >
       {children}

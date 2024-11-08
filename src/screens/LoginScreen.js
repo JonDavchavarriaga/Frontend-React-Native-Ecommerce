@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DataContext } from '../components/DataContext'; // Asegúrate de que la ruta es correcta
 
@@ -31,7 +31,7 @@ const LoginScreen = ({ navigation }) => {
         setIsLoggedIn(true);
         navigation.replace('Main');
       } else {
-        setError('Credenciales incorrectas. Inténtalo de nuevo.');
+        Alert.alert('Error', 'Credenciales incorrectas');
       }
     } catch (error) {
       console.error('Error during login:', error);
