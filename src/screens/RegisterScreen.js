@@ -35,11 +35,7 @@ const RegisterScreen = ({ navigation }) => {
           onChangeText={setPassword}
         />
         <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)} style={styles.icon}>
-          <MaterialCommunityIcons
-            name={passwordVisible ? 'eye-off' : 'eye'} // Cambia el ícono
-            size={24}
-            color='gray'
-          />
+          <MaterialCommunityIcons name={passwordVisible ? 'eye-off' : 'eye'} size={24} color='gray' />
         </TouchableOpacity>
       </View>
 

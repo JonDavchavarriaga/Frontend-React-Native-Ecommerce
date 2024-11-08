@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { DataContext } from '../components/DataContext'; // Asegúrate de que la ruta es correcta
+import { DataContext } from '../components/DataContext';
 
 const LoginScreen = ({ navigation }) => {
   const { setIsLoggedIn } = useContext(DataContext);
@@ -11,15 +11,13 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    console.log('Props en LoginScreen:', { navigation, setIsLoggedIn }); // Verifica que esta línea muestra la función
-
-    // Simulación de autenticación: en la práctica, reemplaza esto con tu lógica real
+    console.log('Props en LoginScreen:', { navigation, setIsLoggedIn });
     if (email === 'prueba@gmail.com' && password === '12345') {
       console.log('Iniciando sesión...');
       setIsLoggedIn(true);
       navigation.replace('Main');
     } else {
-      alert('Credenciales incorrectas. Inténtalo de nuevo.'); // Mensaje de error mejorado
+      alert('Credenciales incorrectas. Inténtalo de nuevo.');
     }
   };
 
@@ -63,10 +61,10 @@ const LoginScreen = ({ navigation }) => {
         <Text style={styles.rememberMeText}>Recordar contraseña</Text>
       </View>
 
-      {/* Texto de "¿Olvidó su contraseña?" */}
+      {/* Texto de "¿Olvidó su contraseña?"
       <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
         <Text style={styles.forgotText}>¿Olvidó su contraseña?</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       {/* Botón de login */}
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
