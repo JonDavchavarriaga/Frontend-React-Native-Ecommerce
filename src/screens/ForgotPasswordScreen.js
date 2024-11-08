@@ -5,7 +5,6 @@ const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
 
   const handlePasswordReset = () => {
-    // Lógica para enviar la solicitud de restablecimiento de contraseña
     console.log('Solicitud de restablecimiento enviada a:', email);
   };
 

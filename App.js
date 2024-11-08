@@ -7,6 +7,7 @@ import { StyleSheet, View } from 'react-native';
 import { DataContext, DataProvider } from './src/components/DataContext';
 import ModalComponent from './src/components/ModalComponent';
 import Products from './src/components/Products';
+import CartScreen from './src/screens/CartScreen';
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
@@ -35,6 +36,7 @@ function Tabs({ route }) {
         name='Home'
         component={HomeScreen}
         options={{
+          headerShown: false,
           tabBarIcon: ({ color }) => <MaterialIcons name='star' size={24} color={color} />,
         }}
       />
@@ -43,13 +45,14 @@ function Tabs({ route }) {
           name='Login'
           component={LoginScreen}
           options={{
+            headerShown: false,
             tabBarIcon: ({ color }) => <MaterialIcons name='person' size={24} color={color} />,
           }}
         />
       )}
       <Tab.Screen
         name='Cart'
-        component={HomeScreen}
+        component={CartScreen}
         options={{
           tabBarIcon: ({ color }) => <MaterialIcons name='shopping-cart' size={24} color={color} />,
         }}
