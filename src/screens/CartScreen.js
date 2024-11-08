@@ -1,9 +1,11 @@
-import React, { useContext } from 'react';
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { FlatList, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { DataContext } from '../components/DataContext';
 
 export default function CartScreen() {
   const { cart, removeFromCart, updateQuantity, getTotalPrice } = useContext(DataContext);
+
+  const [hovered, setHovered] = useState(false); // Estado para controlar el hover en "Ir a pagar"
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
@@ -44,9 +46,19 @@ export default function CartScreen() {
       {/* Total y botón para continuar */}
       <View style={styles.totalContainer}>
         <Text style={styles.totalText}>Total: ${getTotalPrice()}</Text>
-        <TouchableOpacity style={styles.checkoutButton} onPress={() => alert('Continuar con la compra')}>
+        <Pressable
+          style={[
+            styles.checkoutButton,
+            hovered && styles.checkButtonHovered, // Aplica el estilo de aumento
+          ]}
+          onPress={() => alert('Continuar con la compra')}
+          onMouseEnter={() => setHovered(true)} // Activa el hover en escritorio
+          onMouseLeave={() => setHovered(false)} // Desactiva el hover en escritorio
+          onPressIn={() => setHovered(true)} // Activa el efecto de aumento al presionar en móviles
+          onPressOut={() => setHovered(false)} // Desactiva el efecto de aumento al soltar en móviles
+        >
           <Text style={styles.checkoutButtonText}>Ir a pagar</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );
@@ -128,6 +140,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'orange',
     borderRadius: 5,
     alignItems: 'center',
+    transition: 'transform 0.2s ease', // Animación suave para web
+  },
+  checkButtonHovered: {
+    transform: [{ scale: 1.1 }], // Efecto de aumento al hacer hover
   },
   checkoutButtonText: {
     color: '#fff',
