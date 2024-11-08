@@ -5,6 +5,7 @@ const DataContext = createContext();
 const DataProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cart, setCart] = useState([]);
+  const logout = () => setIsLoggedIn(false);
 
   // Añadir un producto o actualizar la cantidad si ya existe
   const buyProducts = (product) => {
@@ -47,6 +48,7 @@ const DataProvider = ({ children }) => {
         getTotalPrice,
         isLoggedIn,
         setIsLoggedIn,
+        logout,
       }}
     >
       {children}
