@@ -1,22 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View, Image } from 'react-native';
 import { DataContext } from './DataContext';
 
 const Products = () => {
   const { buyProducts } = useContext(DataContext);
-
-  // Estado para almacenar los productos obtenidos
   const [productos, setProductos] = useState([]);
 
-  // Usamos useEffect para hacer la solicitud cuando el componente se monta
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // Hacemos la solicitud a la API
         const response = await fetch('http://localhost:8080/Article?page=0&size=10&sortBy=name&ascending=true');
         const data = await response.json();
 
-        // Extraemos los productos del JSON y actualizamos el estado
+        // Almacenamos los productos en el estado
         setProductos(data.content);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -24,7 +20,7 @@ const Products = () => {
     };
 
     fetchProducts();
-  }, []); // Este hook solo se ejecuta una vez cuando el componente se monta
+  }, []);
 
   const handleBuyPress = (product) => {
     buyProducts(product);
@@ -37,8 +33,7 @@ const Products = () => {
         data={productos}
         renderItem={({ item }) => (
           <View style={styles.productItem}>
-            {/* Asegúrate de que la URL de la imagen esté completa */}
-            {/* <Image source={{ uri: {item.image} }} style={styles.productImage} /> */}
+            <Image source={{ uri: item.image }} style={styles.productImage} />
             <Text style={styles.productName}>{item.name}</Text>
             <Text style={styles.productPrice}>Precio: {item.price} $</Text>
             <Text style={styles.productDescription}>{item.description}</Text>

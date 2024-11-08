@@ -10,11 +10,11 @@ export default function CartScreen() {
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       {/* Imagen del producto */}
-      <Image source={{ uri: item.img }} style={styles.productImage} />
+      <Image source={{ uri: item.image }} style={styles.productImage} />
 
       {/* Detalles del producto */}
       <View style={styles.detailsContainer}>
-        <Text style={styles.productName}>{item.productName}</Text>
+        <Text style={styles.productName}>{item.name}</Text>
         <Text style={styles.productPrice}>${item.price}</Text>
 
         {/* Cantidad de productos con botones para incrementar y reducir */}
