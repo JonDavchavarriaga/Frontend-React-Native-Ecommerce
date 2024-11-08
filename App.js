@@ -54,6 +54,7 @@ function Tabs({ route }) {
         name='Cart'
         component={CartScreen}
         options={{
+          headerShown: false,
           tabBarIcon: ({ color }) => <MaterialIcons name='shopping-cart' size={24} color={color} />,
         }}
       />
