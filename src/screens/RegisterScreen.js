@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-
+import React, { useContext, useState } from 'react';
+import { Image,Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DataContext } from '../components/DataContext';
 
 const RegisterScreen = ({ navigation }) => {
+  const { setIsLoggedIn } = useContext(DataContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -36,6 +38,8 @@ const RegisterScreen = ({ navigation }) => {
 
         // Mostrar alerta de éxito y navegar a la pantalla de inicio de sesión
         Alert.alert('Éxito', 'Registro exitoso');
+        await AsyncStorage.setItem('jwtToken', token);
+        setIsLoggedIn(true);
         console.log('Token recibido:', token);
         navigation.replace('Login'); // Navega a la pantalla de Login después del registro
 
