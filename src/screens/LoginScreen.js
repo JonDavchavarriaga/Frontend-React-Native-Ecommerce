@@ -1,7 +1,8 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useContext, useState } from 'react';
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { DataContext } from '../components/DataContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DataContext } from '../components/DataContext'; // Asegúrate de que la ruta es correcta
 
 const LoginScreen = ({ navigation }) => {
   const { setIsLoggedIn } = useContext(DataContext);
@@ -9,15 +10,32 @@ const LoginScreen = ({ navigation }) => {
   const [rememberMe, setRememberMe] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-  const handleLogin = () => {
-    console.log('Props en LoginScreen:', { navigation, setIsLoggedIn });
-    if (email === 'prueba@gmail.com' && password === '12345') {
-      console.log('Iniciando sesión...');
-      setIsLoggedIn(true);
-      navigation.replace('Main');
-    } else {
-      alert('Credenciales incorrectas. Inténtalo de nuevo.');
+      if (response.ok) {
+        const data = await response.json();
+        const token = data.token; // Asegúrate de que el backend envíe el token bajo `data.token`
+
+        // Guarda el token en AsyncStorage
+        await AsyncStorage.setItem('jwtToken', token);
+
+        // Actualiza el estado de autenticación
+        setIsLoggedIn(true);
+        navigation.replace('Main');
+      } else {
+        setError('Credenciales incorrectas. Inténtalo de nuevo.');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      setError('Ocurrió un error. Inténtalo más tarde.');
     }
   };
 
