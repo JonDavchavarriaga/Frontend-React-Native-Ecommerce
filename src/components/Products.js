@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { DataContext } from './DataContext';
 
@@ -43,8 +43,19 @@ const Products = () => {
     },
   ];
 
+  const [hoveredIndex, setHoveredIndex] = useState(null); // Estado para controlar el hover
+  const [touchedIndex, setTouchedIndex] = useState(null); // Estado para controlar cuando se toca en dispositivos móviles
+
   const handleBuyPress = (product) => {
     buyProducts(product);
+  };
+
+  const handlePressIn = (index) => {
+    setTouchedIndex(index); // Simula el hover cuando se toca en móviles
+  };
+
+  const handlePressOut = () => {
+    setTouchedIndex(null); // Elimina el efecto de aumento al dejar de tocar
   };
 
   return (
@@ -52,12 +63,22 @@ const Products = () => {
       <Text style={styles.header}>FOURMINDS STORE</Text>
       <FlatList
         data={productos}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <View style={styles.productItem}>
             <Image source={{ uri: item.img }} style={styles.productImage} />
             <Text style={styles.productName}>{item.productName}</Text>
             <Text style={styles.productPrice}> Precio: {item.price} $</Text>
-            <Pressable style={styles.buyButton} onPress={() => handleBuyPress(item)}>
+            <Pressable
+              style={[
+                styles.buyButton,
+                (hoveredIndex === index || touchedIndex === index) && styles.buyButtonHovered, // Aplica el estilo de aumento
+              ]}
+              onPress={() => handleBuyPress(item)}
+              onMouseEnter={() => setHoveredIndex(index)} // Activa el hover en escritorio
+              onMouseLeave={() => setHoveredIndex(null)} // Desactiva el hover
+              onPressIn={() => handlePressIn(index)} // Activa el efecto de aumento al presionar en móviles
+              onPressOut={handlePressOut} // Desactiva el efecto de aumento al soltar el toque en móviles
+            >
               <Text style={styles.buyButtonText}>Comprar</Text>
             </Pressable>
           </View>
@@ -107,6 +128,12 @@ const styles = StyleSheet.create({
     width: 150,
     marginTop: 8,
     borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'transform 0.2s ease', // Hace la animación más suave en la web
+  },
+  buyButtonHovered: {
+    transform: [{ scale: 1.1 }], // Aumento de tamaño al hacer hover o al presionar
   },
   buyButtonText: {
     color: 'white',

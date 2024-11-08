@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
-import { Image,Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useContext, useState } from 'react';
+import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { DataContext } from '../components/DataContext';
 
 const RegisterScreen = ({ navigation }) => {
@@ -10,6 +10,7 @@ const RegisterScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [touched, setTouched] = useState(false); // Estado para "hover"
 
   const handleRegister = async () => {
     // Validar que las contraseñas coincidan
@@ -56,6 +57,7 @@ const RegisterScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Realizar Registro</Text> {/* Título agregado */}
       <TextInput placeholder='Nombre' value={firstName} onChangeText={setFirstName} style={styles.input} />
       <TextInput placeholder='Apellido' value={lastName} onChangeText={setLastName} style={styles.input} />
       <TextInput
@@ -80,8 +82,14 @@ const RegisterScreen = ({ navigation }) => {
         style={styles.input}
         secureTextEntry
       />
-
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+      <TouchableOpacity
+        style={[styles.button, touched && styles.buttonHovered]} // Aplica el estilo de "hover"
+        onPress={handleRegister}
+        onPressIn={() => setTouched(true)} // Activa el efecto al presionar en móviles
+        onPressOut={() => setTouched(false)} // Desactiva el efecto al soltar en móviles
+        onMouseEnter={() => setTouched(true)} // Activa el "hover" en web
+        onMouseLeave={() => setTouched(false)} // Desactiva el "hover" en web
+      >
         <Text style={styles.buttonText}>Registrarse</Text>
       </TouchableOpacity>
     </View>
@@ -95,12 +103,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white',
   },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center', // Centra el título
+  },
   input: {
     borderColor: 'gray',
     borderWidth: 1,
     padding: 10,
     marginBottom: 15,
     borderRadius: 5,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
+  },
+  innerCheckbox: {
+    width: 12,
+    height: 12,
+    backgroundColor: 'orange',
+    borderRadius: 2,
   },
   button: {
     backgroundColor: 'orange',
@@ -109,6 +139,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginBottom: 20,
+    transition: 'transform 0.2s ease', // Efecto de transición para el "hover" en web
+  },
+  buttonHovered: {
+    transform: [{ scale: 1.1 }], // Aumenta el tamaño del botón cuando está en "hover"
   },
   buttonText: {
     color: 'white',
