@@ -1,5 +1,4 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useContext, useState } from 'react';
 import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,7 +10,7 @@ const LoginScreen = ({ navigation }) => {
   const [rememberMe, setRememberMe] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [touched, setTouched] = useState(false); // Nuevo estado para controlar el efecto de "hover"
+  const [error, setError] = useState(''); // Estado para el error
 
   const handleLogin = async () => {
     try {
@@ -25,7 +24,7 @@ const LoginScreen = ({ navigation }) => {
 
       if (response.ok) {
         const data = await response.json();
-        const token = data.token; // Asegúrate de que el backend envíe el token bajo `data.token`
+        const token = data.token;
 
         // Guarda el token en AsyncStorage
         await AsyncStorage.setItem('jwtToken', token);
@@ -34,11 +33,11 @@ const LoginScreen = ({ navigation }) => {
         setIsLoggedIn(true);
         navigation.replace('Main');
       } else {
-        Alert.alert('Error', 'Credenciales incorrectas');
+        setError('Credenciales incorrectas. Inténtalo de nuevo.'); // Establecer el error
       }
     } catch (error) {
       console.error('Error during login:', error);
-      setError('Ocurrió un error. Inténtalo más tarde.');
+      setError('Ocurrió un error. Inténtalo más tarde.'); // Establecer el error
     }
   };
 
@@ -47,6 +46,7 @@ const LoginScreen = ({ navigation }) => {
       <Image source={require('../../assets/favicon.png')} style={styles.image} resizeMode='contain' />
       <Text style={styles.title}>Iniciar Sesión</Text>
 
+      {/* Input de correo electrónico */}
       <TextInput
         placeholder='Correo electrónico'
         style={styles.input}
@@ -56,6 +56,7 @@ const LoginScreen = ({ navigation }) => {
         onChangeText={setEmail}
       />
 
+      {/* Input de contraseña con botón de mostrar/ocultar */}
       <View style={styles.passwordContainer}>
         <TextInput
           placeholder='Contraseña'
@@ -70,6 +71,10 @@ const LoginScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
+      {/* Mostrar mensaje de error si existe */}
+      {error && <Text style={styles.errorText}>{error}</Text>}
+
+      {/* Check de recordar contraseña */}
       <View style={styles.rememberMeContainer}>
         <TouchableOpacity onPress={() => setRememberMe(!rememberMe)}>
           <View style={[styles.checkbox, rememberMe && styles.checked]}>
@@ -79,17 +84,12 @@ const LoginScreen = ({ navigation }) => {
         <Text style={styles.rememberMeText}>Recordar contraseña</Text>
       </View>
 
-      <TouchableOpacity
-        style={[styles.button, touched && styles.buttonHovered]} // Aplica el estilo de "hover"
-        onPress={handleLogin}
-        onPressIn={() => setTouched(true)} // Activa el efecto al presionar en móviles
-        onPressOut={() => setTouched(false)} // Desactiva el efecto al soltar en móviles
-        onMouseEnter={() => setTouched(true)} // Activa el "hover" en web
-        onMouseLeave={() => setTouched(false)} // Desactiva el "hover" en web
-      >
+      {/* Botón de login */}
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
       </TouchableOpacity>
 
+      {/* Texto de "Regístrate aquí" que navega a la pantalla de registro */}
       <TouchableOpacity onPress={() => navigation.navigate('Register')}>
         <Text style={styles.registerText}>¿No tienes cuenta? Regístrate aquí</Text>
       </TouchableOpacity>
@@ -168,10 +168,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginBottom: 20,
-    transition: 'transform 0.2s ease', // Efecto de transición para el "hover" en web
-  },
-  buttonHovered: {
-    transform: [{ scale: 1.1 }], // Aumenta el tamaño del botón cuando está en "hover"
   },
   buttonText: {
     color: 'white',
@@ -181,6 +177,12 @@ const styles = StyleSheet.create({
   registerText: {
     textAlign: 'center',
     color: 'orange',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });
 
